@@ -166,12 +166,14 @@ function App() {
         {shareBalance && <div>{shareBalance}</div>}
       <button onClick={() => refetchShareBalance}>Fetch My Share Balance:</button>
         <h2>Buy Bondings</h2>
+        <label htmlFor="bondingsId">Bondings ID:</label>
         <input
           type="number"
           value={bondingsId}
           onChange={(e) => setBondingsId(Number(e.target.value))}
           placeholder="Bondings ID"
         />
+        <label htmlFor="share">Share:</label>
         <input
           type="number"
           value={share}
@@ -185,12 +187,14 @@ function App() {
 
       <div>
         <h2>Sell Bondings</h2>
-        <input
+        <label htmlFor="bondingsId">Bondings ID:</label>
+         <input
           type="number"
           value={bondingsId}
           onChange={(e) => setBondingsId(Number(e.target.value))}
           placeholder="Bondings ID"
         />
+        <label htmlFor="share">Share:</label>
         <input
           type="number"
           value={share}
