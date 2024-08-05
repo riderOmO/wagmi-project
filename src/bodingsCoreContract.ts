@@ -53,12 +53,22 @@ export const BONDINGS_CORE_ABI = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "protocolFeeDestination_",
+				"name": "_protocolFeeDestination",
 				"type": "address"
 			},
 			{
 				"internalType": "address",
 				"name": "_admin",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_uniswapRouter",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_tokenDistributionContract",
 				"type": "address"
 			}
 		],
@@ -83,22 +93,14 @@ export const BONDINGS_CORE_ABI = [
 				"internalType": "string",
 				"name": "symbol",
 				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "topic",
+				"type": "string"
 			}
 		],
 		"name": "launchBondings",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "bondingsId",
-				"type": "uint256"
-			}
-		],
-		"name": "launchERC20",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -261,6 +263,12 @@ export const BONDINGS_CORE_ABI = [
 				"type": "string"
 			},
 			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "topic",
+				"type": "string"
+			},
+			{
 				"indexed": true,
 				"internalType": "address",
 				"name": "user",
@@ -317,25 +325,6 @@ export const BONDINGS_CORE_ABI = [
 		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "operator",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "bool",
-				"name": "isOperator_",
-				"type": "bool"
-			}
-		],
-		"name": "OperatorSet",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
 				"indexed": true,
 				"internalType": "address",
 				"name": "previousOwner",
@@ -372,7 +361,7 @@ export const BONDINGS_CORE_ABI = [
 			},
 			{
 				"internalType": "uint256",
-				"name": "minGetTokenAmount",
+				"name": "minGetETH",
 				"type": "uint256"
 			}
 		],
@@ -444,20 +433,7 @@ export const BONDINGS_CORE_ABI = [
 				"type": "uint256"
 			}
 		],
-		"name": "setFairLaunchSupply",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "newMaxSupply",
-				"type": "uint256"
-			}
-		],
-		"name": "setMaxSupply",
+		"name": "setLaunchSupply",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -575,6 +551,11 @@ export const BONDINGS_CORE_ABI = [
 				"type": "string"
 			},
 			{
+				"internalType": "string",
+				"name": "topic",
+				"type": "string"
+			},
+			{
 				"internalType": "uint8",
 				"name": "stage",
 				"type": "uint8"
@@ -606,6 +587,25 @@ export const BONDINGS_CORE_ABI = [
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "bondingToTopic",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -645,11 +645,16 @@ export const BONDINGS_CORE_ABI = [
 				"type": "uint256"
 			}
 		],
-		"name": "getBondingsTotalShare",
+		"name": "getBondingsDistributionInfo",
 		"outputs": [
 			{
+				"internalType": "address",
+				"name": "erc20address",
+				"type": "address"
+			},
+			{
 				"internalType": "uint256",
-				"name": "",
+				"name": "totalShare",
 				"type": "uint256"
 			}
 		],
@@ -862,6 +867,51 @@ export const BONDINGS_CORE_ABI = [
 	},
 	{
 		"inputs": [],
+		"name": "tokenDistributionContract",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"name": "topicHasLaunchedERC20",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "uniswapRouter",
+		"outputs": [
+			{
+				"internalType": "contract IUniswapV2Router02",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "UPGRADE_INTERFACE_VERSION",
 		"outputs": [
 			{
@@ -897,6 +947,6 @@ export const BONDINGS_CORE_ABI = [
 		"stateMutability": "view",
 		"type": "function"
 	}
-] as const;
+]as const;
    
-  export const BONDINGS_CORE_CONTRACT_ADDRESS = "0x5Ba8d27E08f06CDDd4cD00B5dF61dcb46E84Db77";
+  export const BONDINGS_CORE_CONTRACT_ADDRESS = "0xC41C360CECb74072F5Ea98567718D81dF001dC86";
