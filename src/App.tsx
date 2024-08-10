@@ -210,18 +210,26 @@ function getBuyPriceAfterFee(supply: bigint, amount: bigint, fee: bigint): bigin
   return price;
 }
 
-function findAmount(supply: bigint, targetSummation: bigint, tolerance = 0.001, maxIterations = 10000): bigint | null {
+function findAmount(supply: bigint, targetSummation: bigint, maxIterations = 10000): bigint | null {
   let low = BigInt(1);
-  let high = BigInt(10**7);  // 设定一个较大的初始上界
+  let high = BigInt(10**8);  // 设定一个较大的初始上界
   let iterations = 0;
+  let bestMid: bigint | null = null;
+  let bestDifference = targetSummation;  // 初始为最大可能的差值
 
   while (low <= high && iterations < maxIterations) {
     const mid = (low + high) / BigInt(2);
     const currentSummation = getBuyPriceAfterFee(supply, mid, BigInt(250));
+    const difference = targetSummation - currentSummation;
 
-    if (BigInt(Math.abs(Number(targetSummation - currentSummation))) < targetSummation * BigInt(Math.floor(tolerance * 10000)) / BigInt(10000) && currentSummation <= targetSummation) {
-      return mid;
-    } else if (currentSummation < targetSummation) {
+    if (currentSummation <= targetSummation) {
+      if (bestMid === null || difference < bestDifference) {
+        bestDifference = difference;
+        bestMid = mid;
+      }
+    }
+
+    if (currentSummation < targetSummation) {
       low = mid + BigInt(1);
     } else {
       high = mid - BigInt(1);
@@ -230,8 +238,11 @@ function findAmount(supply: bigint, targetSummation: bigint, tolerance = 0.001, 
     iterations += 1;
   }
 
-  return null;  // 如果在最大迭代次数内没有找到解，则返回 null
+  console.log('Max iterations reached', iterations);
+  return bestMid;  // 返回最优解
 }
+
+
 
 
   return (
